@@ -1,12 +1,12 @@
 from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
-from app.models import ConversionRate
+from app.db.schema import ConversionRate
 
 
-def test_convert_success(client: TestClient, db_session: Session):
-    db_session.add(ConversionRate(from_currency="USD", to_currency="EUR", rate=0.9))
-    db_session.commit()
+def test_convert_success(client: TestClient, session: Session):
+    session.add(ConversionRate(from_currency="USD", to_currency="EUR", rate=0.9))
+    session.commit()
 
     r = client.get("/convert?from_currency=USD&to_currency=EUR&amount=100")
     assert r.status_code == 200
