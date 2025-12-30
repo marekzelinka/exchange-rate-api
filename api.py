@@ -22,3 +22,8 @@ def convert(
     service: Annotated[ExchangeRateService, Depends(get_exchange_rate_service)],
 ):
     return service.convert(from_currency, to_currency, amount)
+
+
+@router.get("/health")
+def health():
+    return {"status": "OK"}
