@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from decimal import Decimal
 
@@ -25,7 +26,7 @@ class ExchangeRateService:
         if not rate_entry or rate_entry.rate <= 0:
             raise HTTPException(status_code=404, detail="Exchange rate not available")
 
-        print(f"Using rate {rate_entry.rate}")
+        logging.info(f"Using rate {rate_entry.rate}")
         result = Decimal(amount) * rate_entry.rate
 
         conversion = Conversion(
