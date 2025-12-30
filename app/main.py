@@ -1,14 +1,22 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-from app.api import router
-from app.db.session import create_db_and_tables
+from .api import convert, health
+from .core.logging import setup_logging
+from .db.session import create_db_and_tables
 
-app = FastAPI()
+setup_logging()
 
 
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     create_db_and_tables()
+    yield
 
 
-app.include_router(router)
+app = FastAPI(lifespan=lifespan)
+
+
+app.include_router(convert.router, prefix="/convert")
+app.include_router(health.router, prefix="/health")
