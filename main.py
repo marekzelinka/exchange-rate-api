@@ -1,7 +1,8 @@
 from decimal import Decimal
+from typing import Annotated
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 
 app = FastAPI()
 
@@ -14,7 +15,11 @@ RATES = {
 
 
 @app.get("/convert")
-def convert(from_currency: str, to_currency: str, amount: Decimal):
+def convert(
+    from_currency: Annotated[str, Query(max_length=3, min_length=3)],
+    to_currency: Annotated[str, Query(max_length=3, min_length=3)],
+    amount: Annotated[Decimal, Query(gt=0)],
+):
     key = (from_currency.upper(), to_currency.upper())
     rate = RATES.get(key)
 
