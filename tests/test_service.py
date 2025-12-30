@@ -12,7 +12,6 @@ def test_service_convert_valid(db_session: Session):
 
     service = ExchangeRateService(db_session)
     result = service.convert("usd", "jpy", Decimal("10.0"))
-
     assert result["rate"] == 150
     assert result["result"] == 1500
 

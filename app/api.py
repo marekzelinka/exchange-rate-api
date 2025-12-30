@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
@@ -26,7 +26,10 @@ def convert(
     amount: Annotated[Decimal, Query(gt=0)],
     service: Annotated[ExchangeRateService, Depends(get_exchange_rate_service)],
 ):
-    return service.convert(from_currency, to_currency, amount)
+    try:
+        return service.convert(from_currency, to_currency, amount)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/health")
