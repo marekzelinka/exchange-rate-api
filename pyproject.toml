@@ -12,6 +12,7 @@ dependencies = [
     "pytest>=9.0.2",
     "slowapi>=0.1.9",
     "sqlalchemy>=2.0.45",
+    "sqlmodel>=0.0.31",
     "uvicorn>=0.40.0",
 ]
 

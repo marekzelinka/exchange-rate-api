@@ -1,33 +1,37 @@
 import logging
 from datetime import datetime
-from decimal import Decimal
 
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlmodel import Session, and_, desc, select
 
-from app.models import Conversion, ConversionRate
+from app.db.schema import Conversion, ConversionRate
 
 
 class ExchangeRateService:
-    def __init__(self, db: Session) -> None:
-        self.db: Session = db
+    def __init__(self, session: Session) -> None:
+        self.session: Session = session
 
-    def convert(self, from_currency: str, to_currency: str, amount: Decimal) -> dict:
+    def convert(self, from_currency: str, to_currency: str, amount: float) -> dict:
         from_currency = from_currency.upper()
         to_currency = to_currency.upper()
 
-        rate_entry = (
-            self.db.query(ConversionRate)
-            .filter_by(from_currency=from_currency, to_currency=to_currency)
-            .order_by(ConversionRate.timestamp.desc())
-            .first()
+        results = self.session.exec(
+            select(ConversionRate)
+            .where(
+                and_(
+                    ConversionRate.from_currency == from_currency,
+                    ConversionRate.to_currency == to_currency,
+                )
+            )
+            .order_by(desc(ConversionRate.timestamp))
         )
+        rate_entry = results.first()
 
         if not rate_entry or rate_entry.rate <= 0:
             raise HTTPException(status_code=404, detail="Exchange rate not available")
 
         logging.info(f"Using rate {rate_entry.rate}")
-        result = Decimal(amount) * rate_entry.rate
+        result = amount * rate_entry.rate
 
         conversion = Conversion(
             from_currency=from_currency,
@@ -36,7 +40,7 @@ class ExchangeRateService:
             result=result,
             timestamp=datetime.now(),
         )
-        self.db.add(conversion)
-        self.db.commit()
+        self.session.add(conversion)
+        self.session.commit()
 
         return {"rate": rate_entry.rate, "result": result}

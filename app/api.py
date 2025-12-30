@@ -1,29 +1,27 @@
-from decimal import Decimal
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from sqlalchemy.orm import Session
 
-from app.database import get_db
+from app.db.session import SessionDep
 from app.service import ExchangeRateService
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
 
 
-def get_exchange_rate_service(session: Annotated[Session, Depends(get_db)]):
+def get_exchange_rate_service(session: SessionDep):
     yield ExchangeRateService(session)
 
 
 @router.get("/convert")
 @limiter.limit("5/minute")
-def convert(
+async def convert(
     request: Request,
     from_currency: Annotated[str, Query(max_length=3, min_length=3)],
     to_currency: Annotated[str, Query(max_length=3, min_length=3)],
-    amount: Annotated[Decimal, Query(gt=0)],
+    amount: Annotated[float, Query(gt=0)],
     service: Annotated[ExchangeRateService, Depends(get_exchange_rate_service)],
 ):
     try:
@@ -33,5 +31,5 @@ def convert(
 
 
 @router.get("/health")
-def health():
+async def health():
     return {"status": "OK"}
