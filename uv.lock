@@ -63,7 +63,7 @@ wheels = [
 ]
 
 [[package]]
-name = "currency-exchange-api"
+name = "exchange-rate-api"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
