@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 
@@ -5,14 +7,14 @@ app = FastAPI()
 
 # Exchange rates
 RATES = {
-    ("USD", "EUR"): 0.91,
-    ("EUR", "USD"): 1.10,
-    ("USD", "JPY"): 150.0,
+    ("USD", "EUR"): Decimal("0.91"),
+    ("EUR", "USD"): Decimal("1.10"),
+    ("USD", "JPY"): Decimal("150.0"),
 }
 
 
 @app.get("/convert")
-def convert(from_currency: str, to_currency: str, amount: float):
+def convert(from_currency: str, to_currency: str, amount: Decimal):
     key = (from_currency.upper(), to_currency.upper())
     rate = RATES.get(key)
 
