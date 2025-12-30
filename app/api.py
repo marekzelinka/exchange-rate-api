@@ -6,8 +6,8 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
-from database import get_db
-from service import ExchangeRateService
+from app.database import get_db
+from app.service import ExchangeRateService
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)

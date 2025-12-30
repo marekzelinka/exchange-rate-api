@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from config import config
-from models import Base
+from app.config import config
+from app.models import Base
 
 DATABASE_URL = config.database_url
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})

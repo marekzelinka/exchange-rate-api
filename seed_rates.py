@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from database import SessionLocal
-from models import ConversionRate
+from app.database import SessionLocal
+from app.models import ConversionRate
 
 sample_rates = [
     {"from_currency": "USD", "to_currency": "EUR", "rate": 0.91},

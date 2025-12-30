@@ -4,7 +4,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from models import Conversion, ConversionRate
+from app.models import Conversion, ConversionRate
 
 
 class ExchangeRateService:
@@ -26,7 +26,7 @@ class ExchangeRateService:
             raise HTTPException(status_code=404, detail="Exchange rate not available")
 
         print(f"Using rate {rate_entry.rate}")
-        result = amount * rate_entry.rate
+        result = Decimal(amount) * rate_entry.rate
 
         conversion = Conversion(
             from_currency=from_currency,
