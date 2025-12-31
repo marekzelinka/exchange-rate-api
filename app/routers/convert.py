@@ -6,16 +6,16 @@ from app.core.limiter import limiter
 from app.db.session import SessionDep
 from app.services.exchange_rate_service import ExchangeRateService
 
-router = APIRouter()
+router = APIRouter(prefix="/convert", tags=["convert"])
 
 
 def get_exchange_rate_service(session: SessionDep):
     yield ExchangeRateService(session)
 
 
-@router.get("")
+@router.get("/")
 @limiter.limit("5/minute")
-async def convert(
+async def read_exchange_rate(
     request: Request,
     from_currency: Annotated[str, Query(max_length=3, min_length=3)],
     to_currency: Annotated[str, Query(max_length=3, min_length=3)],

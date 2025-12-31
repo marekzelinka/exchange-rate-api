@@ -3,9 +3,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api import convert, health
-from .core.logging import setup_logging
-from .db.session import create_db_and_tables
+from app.core.logging import setup_logging
+from app.db.session import create_db_and_tables
+from app.routers import convert, health
 
 setup_logging()
 
@@ -17,7 +17,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
 
 origins = [
     "http://localhost",
@@ -32,6 +31,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app.include_router(convert.router, prefix="/convert")
-app.include_router(health.router, prefix="/health")
+app.include_router(convert.router)
+app.include_router(health.router)
