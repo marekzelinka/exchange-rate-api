@@ -10,14 +10,12 @@ def test_service_convert_valid(session: Session):
 
     service = ExchangeRateService(session)
     result = service.convert("usd", "jpy", 10)
+    assert result is not None
     assert result["rate"] == 150
     assert result["result"] == 1500
 
 
 def test_service_convert_invalid_currency(session: Session):
     service = ExchangeRateService(session)
-    try:
-        service.convert("AAA", "BBB", 10)
-        assert False, "Expected HTTPException"
-    except Exception as e:
-        assert "Exchange rate not available" in str(e)
+    result = service.convert("AAA", "BBB", 10)
+    assert result is None

@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
 
-from fastapi import HTTPException
 from sqlmodel import Session, and_, desc, select
 
 from app.db.schema import Conversion, ConversionRate
@@ -11,7 +10,9 @@ class ExchangeRateService:
     def __init__(self, session: Session) -> None:
         self.session: Session = session
 
-    def convert(self, from_currency: str, to_currency: str, amount: float) -> dict:
+    def convert(
+        self, from_currency: str, to_currency: str, amount: float
+    ) -> dict | None:
         from_currency = from_currency.upper()
         to_currency = to_currency.upper()
 
@@ -28,7 +29,7 @@ class ExchangeRateService:
         rate_entry = results.first()
 
         if not rate_entry or rate_entry.rate <= 0:
-            raise HTTPException(status_code=404, detail="Exchange rate not available")
+            return None
 
         logging.info(f"Using rate {rate_entry.rate}")
         result = amount * rate_entry.rate

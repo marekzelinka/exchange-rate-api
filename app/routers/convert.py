@@ -22,7 +22,7 @@ async def read_exchange_rate(
     amount: Annotated[float, Query(gt=0)],
     service: Annotated[ExchangeRateService, Depends(get_exchange_rate_service)],
 ):
-    try:
-        return service.convert(from_currency, to_currency, amount)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    result = service.convert(from_currency, to_currency, amount)
+    if not result:
+        raise HTTPException(status_code=404, detail="Exchange rate not available")
+    return result
