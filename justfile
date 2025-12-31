@@ -1,6 +1,9 @@
 start:
     uv run uvicorn app.main:app
 
+dev:
+    uv run uvicorn app.main:app --reload
+
 db-seed:
     uv run seed_db.py
 
