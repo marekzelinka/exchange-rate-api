@@ -18,3 +18,8 @@ class Conversion(SQLModel, table=True):
     amount: float
     result: float
     timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class ConversionResult(SQLModel):
+    rate: float
+    result: float

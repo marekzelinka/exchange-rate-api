@@ -7,7 +7,7 @@ dev:
 test:
     uv run pytest
 
-db-seed:
+seed-db:
     uv run seed_db.py
 
 typecheck:

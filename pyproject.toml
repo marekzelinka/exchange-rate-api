@@ -21,3 +21,18 @@ dev = [
     "ruff>=0.14.10",
     "ty>=0.0.8",
 ]
+
+[tool.ruff.lint]
+select = [
+    "E", "F",     # Default Error & Pyflakes
+    "RUF",        # Ruff-specific rules
+    "W",          # pycodestyle warnings
+    "C4",         # flake8-comprehensions
+    "UP",         # pyupgrade
+    "ARG001",     # unused arguments in functions
+    "ANN",        # flake8-annotations (Strict type hinting)
+    "UP",         # pyupgrade (Newest type syntax: e.g., int | None)
+    "B",          # flake8-bugbear (Common logic errors)
+    "I",          # isort (Import sorting)
+    "FAST",       # FastAPI,
+]
