@@ -19,4 +19,4 @@ def test_convert_success(client: TestClient, session: Session) -> None:
 def test_convert_missing_rate(client: TestClient) -> None:
     response = client.get("/convert?from_currency=GBP&to_currency=JPY&amount=50")
     assert response.status_code == 404
-    assert "Exchange rate not available" in response.json()["detail"]
+    assert "Exchange rate not found" in response.json()["detail"]
